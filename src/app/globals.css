@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-gold: #D4AF37;
+  --color-brand-bronze: #926239;
+  --color-brand-navy: #050A14;
+  --color-brand-obsidian: #020408;
+  --color-brand-ivory: #FDFAF5;
+  --color-brand-slate: #2C3E50;
+  
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+:root {
+  --background: #020408;
+  --foreground: #FDFAF5;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.serif-heading {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+}
+
+.luxury-button {
+  @apply px-8 py-3 border border-brand-gold/40 text-brand-gold text-[10px] uppercase tracking-[0.3em] 
+         hover:bg-brand-gold hover:text-brand-obsidian transition-all duration-500 ease-out;
+}
+
+.nav-link {
+  @apply text-[10px] uppercase tracking-[0.2em] text-gray-400 hover:text-brand-gold transition-colors duration-300;
+}
+
+.section-label {
+  @apply text-[10px] uppercase tracking-[0.5em] text-brand-gold/60 mb-6 block;
+}
+
+/* Subtle architectural grid pattern */
+.bg-grid-pattern {
+  background-image: radial-gradient(circle at 1px 1px, rgba(212, 175, 55, 0.05) 1px, transparent 0);
+  background-size: 40px 40px;
+}
+
+@layer utilities {
+  .container-custom {
+    max-width: 90rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
