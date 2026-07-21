@@ -42,9 +42,14 @@ const committee = [
   { name: 'Dania Rizk' },
   { name: 'Omar Al Ansari' },
   { name: 'Hussain Al Mahmoud' },
+  { name: 'Dr Saif Abdul Rahman Obaid Alkaabi' },
 ];
 
 const advisory = [
+  { name: 'H.E Sheikh Dr Faisal bin Khalid Al Qassemi' },
+  { name: 'H.E Nahyan bin Zayed bin Sultan Al Nahyan' },
+  { name: 'Sheikh Khalid Bin Mohammed Al Hamed' },
+  { name: 'Sheikh Al Hajeri Sayegh' },
   { name: 'H.E. Dr. Ahmad Mohamed Ali' },
   { name: 'Nabil Sultan' },
   { name: 'Ramy Abdelkader' },
