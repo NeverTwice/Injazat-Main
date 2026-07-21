@@ -1,24 +1,31 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import { Pool } from "pg";
+import type { Pool } from "pg";
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 
-const globalForDb = globalThis as typeof globalThis & {
-  __arenaNextJsPostgresqlPool?: Pool;
-};
+let _pool: Pool | null = null;
+let _db: NodePgDatabase | null = null;
 
-function getPool() {
+export function getDb(): NodePgDatabase {
+  if (_db) return _db;
+
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
-    return null;
+    throw new Error("DATABASE_URL is not configured");
   }
-  if (globalForDb.__arenaNextJsPostgresqlPool) {
-    return globalForDb.__arenaNextJsPostgresqlPool;
-  }
-  const pool = new Pool({ connectionString: databaseUrl });
-  if (process.env.NODE_ENV !== "production") {
-    globalForDb.__arenaNextJsPostgresqlPool = pool;
-  }
-  return pool;
+
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { Pool: PgPool } = require("pg") as typeof import("pg");
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { drizzle } = require("drizzle-orm/node-postgres") as typeof import("drizzle-orm/node-postgres");
+
+  _pool = new PgPool({ connectionString: databaseUrl });
+  _db = drizzle(_pool);
+  return _db;
 }
 
-export const pool = getPool();
-export const db = pool ? drizzle(pool) : null;
+export function hasDb(): boolean {
+  return !!process.env.DATABASE_URL;
+}
+
+// Legacy exports for compatibility — these are null-safe
+export const pool = null;
+export const db = null;
