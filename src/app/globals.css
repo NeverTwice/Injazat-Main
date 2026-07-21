@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-navy-950: #050a14;
+  --color-navy-900: #0a1225;
+  --color-navy-800: #0f1a35;
+  --color-navy-700: #162348;
+  --color-navy-600: #1c2d5a;
+  --color-charcoal-900: #111111;
+  --color-charcoal-800: #1a1a1a;
+  --color-charcoal-700: #2a2a2a;
+  --color-gold-600: #9a7430;
+  --color-gold-500: #b8943f;
+  --color-gold-400: #c9a854;
+  --color-gold-300: #d4b96e;
+  --color-gold-200: #e0cb8d;
+  --color-ivory-100: #f5f0e8;
+  --color-ivory-200: #ebe4d6;
+  --color-ivory-50: #faf8f3;
+  --font-heading: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Refined scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-navy-950);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(184, 148, 63, 0.4);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(184, 148, 63, 0.6);
+}
+
+::selection {
+  background: rgba(184, 148, 63, 0.3);
+  color: white;
+}
+
+/* Glass morphism */
+.glass {
+  background: rgba(10, 18, 37, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(184, 148, 63, 0.08);
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--color-gold-500);
+  outline-offset: 2px;
+}
+
+/* Smooth link transitions */
+a {
+  transition: color 0.3s ease;
+}
