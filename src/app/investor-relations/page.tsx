@@ -242,12 +242,18 @@ export default function InvestorRelationsPage() {
         {/* Footer bar */}
         <div className="border-t border-white/5 py-6">
           <div className="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div>
-              <img
-                src="/images/injazat-logo.png"
-                alt="Injazat Capital"
-                className="h-12 w-auto object-contain"
-              />
+            <div className="flex items-center gap-3">
+              <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 2 L79 11 L93 38 L93 62 L79 89 L50 98 L21 89 L7 62 L7 38 L21 11 Z" stroke="#b8943f" strokeWidth="1.5" fill="none" opacity="0.5" />
+                <line x1="38" y1="30" x2="38" y2="70" stroke="#b8943f" strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="32" y1="30" x2="44" y2="30" stroke="#b8943f" strokeWidth="1.8" strokeLinecap="round" />
+                <line x1="32" y1="70" x2="44" y2="70" stroke="#b8943f" strokeWidth="1.8" strokeLinecap="round" />
+                <path d="M68 34 C58 28, 50 30, 48 38 L48 62 C50 70, 58 72, 68 66" stroke="#b8943f" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              </svg>
+              <div>
+                <div className="text-white/40 text-[9px] tracking-[0.3em]">INJAZAT</div>
+                <div className="text-white/40 text-[9px] tracking-[0.3em]">CAPITAL</div>
+              </div>
             </div>
             <p className="text-white/15 text-xs">© 2025 Injazat Capital Limited. All rights reserved.</p>
           </div>

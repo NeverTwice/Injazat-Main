@@ -41,11 +41,29 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-4 group shrink-0" aria-label="Injazat Capital Home">
-            <img
-              src="/images/injazat-logo.png"
-              alt="Injazat Capital"
-              className="h-14 w-auto object-contain group-hover:opacity-90 transition-opacity duration-500"
-            />
+            {/* Crisp SVG Logo Mark */}
+            <div className="flex items-center gap-3.5">
+              <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 group-hover:opacity-80 transition-opacity duration-500">
+                {/* Outer octagonal frame */}
+                <path d="M50 2 L79 11 L93 38 L93 62 L79 89 L50 98 L21 89 L7 62 L7 38 L21 11 Z" stroke="#b8943f" strokeWidth="1.5" fill="none" opacity="0.6" />
+                {/* Inner geometric frame */}
+                <path d="M50 12 L72 18 L84 40 L84 60 L72 82 L50 88 L28 82 L16 60 L16 40 L28 18 Z" stroke="#b8943f" strokeWidth="0.8" fill="none" opacity="0.25" />
+                {/* I - left vertical */}
+                <line x1="38" y1="30" x2="38" y2="70" stroke="#b8943f" strokeWidth="2.5" strokeLinecap="round" />
+                {/* I - top serif */}
+                <line x1="32" y1="30" x2="44" y2="30" stroke="#b8943f" strokeWidth="1.8" strokeLinecap="round" />
+                {/* I - bottom serif */}
+                <line x1="32" y1="70" x2="44" y2="70" stroke="#b8943f" strokeWidth="1.8" strokeLinecap="round" />
+                {/* C - arc */}
+                <path d="M68 34 C58 28, 50 30, 48 38 L48 62 C50 70, 58 72, 68 66" stroke="#b8943f" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                {/* Subtle diamond accent */}
+                <path d="M50 22 L53 25 L50 28 L47 25 Z" fill="#b8943f" opacity="0.4" />
+              </svg>
+              <div className="hidden sm:block">
+                <div className="text-white/80 text-[10px] font-medium tracking-[0.35em] leading-tight">INJAZAT</div>
+                <div className="text-white/80 text-[10px] font-medium tracking-[0.35em] leading-tight">CAPITAL</div>
+              </div>
+            </div>
           </Link>
 
           {/* Desktop Nav */}

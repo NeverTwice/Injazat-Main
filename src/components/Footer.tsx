@@ -8,12 +8,20 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="mb-6">
-              <img
-                src="/images/injazat-logo.png"
-                alt="Injazat Capital"
-                className="h-16 w-auto object-contain"
-              />
+            <div className="flex items-center gap-3.5 mb-6">
+              <svg width="44" height="44" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+                <path d="M50 2 L79 11 L93 38 L93 62 L79 89 L50 98 L21 89 L7 62 L7 38 L21 11 Z" stroke="#b8943f" strokeWidth="1.5" fill="none" opacity="0.6" />
+                <path d="M50 12 L72 18 L84 40 L84 60 L72 82 L50 88 L28 82 L16 60 L16 40 L28 18 Z" stroke="#b8943f" strokeWidth="0.8" fill="none" opacity="0.25" />
+                <line x1="38" y1="30" x2="38" y2="70" stroke="#b8943f" strokeWidth="2.5" strokeLinecap="round" />
+                <line x1="32" y1="30" x2="44" y2="30" stroke="#b8943f" strokeWidth="1.8" strokeLinecap="round" />
+                <line x1="32" y1="70" x2="44" y2="70" stroke="#b8943f" strokeWidth="1.8" strokeLinecap="round" />
+                <path d="M68 34 C58 28, 50 30, 48 38 L48 62 C50 70, 58 72, 68 66" stroke="#b8943f" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                <path d="M50 22 L53 25 L50 28 L47 25 Z" fill="#b8943f" opacity="0.4" />
+              </svg>
+              <div>
+                <div className="text-white/70 text-[10px] font-medium tracking-[0.35em]">INJAZAT</div>
+                <div className="text-white/70 text-[10px] font-medium tracking-[0.35em]">CAPITAL</div>
+              </div>
             </div>
             <p className="text-white/40 text-sm leading-relaxed max-w-xs">
               A leading alternative investment firm in the GCC, partnering with exceptional entrepreneurs to build enduring companies.
