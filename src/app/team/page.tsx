@@ -17,8 +17,8 @@ const leaders = [
   { name: "Youssef Ben Hassan", title: "Chief Financial Officer", bio: "Finance executive with 18+ years in capital markets and corporate finance. Formerly with Natixis.", initials: "YB" },
 ];
 
-const committee = ["Mohammed Al Suwaidi", "Khaled El Khatib", "Dania Rizk", "Omar Al Ansari", "Hussain Al Mahmoud"];
-const advisory = ["H.E. Dr. Ahmad Mohamed Ali", "Nabil Sultan", "Ramy Abdelkader", "Dr. Raja Al Gurg"];
+const committee = ["Mohammed Al Suwaidi", "Khaled El Khatib", "Dania Rizk", "Omar Al Ansari", "Hussain Al Mahmoud", "Dr. Saif Abdul Rahman Obaid Alkaabi"];
+const advisory = ["H.E. Sheikh Dr. Faisal bin Khalid Al Qassemi", "H.E. Nahyan bin Zayed bin Sultan Al Nahyan", "Sheikh Khalid bin Mohammed Al Hamed", "Sheikh Al Hajeri Sayegh", "H.E. Dr. Ahmad Mohamed Ali", "Nabil Sultan", "Ramy Abdelkader", "Dr. Raja Al Gurg"];
 const culture = ["Entrepreneurial mindset", "Integrity and transparency", "Collaboration and respect", "Commitment to excellence", "Long-term value creation"];
 
 export default function TeamPage() {
