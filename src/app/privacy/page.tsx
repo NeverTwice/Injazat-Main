@@ -19,7 +19,7 @@ export default function PrivacyPage() {
               <section className="space-y-4">
                 <h2 className="text-brand-gold uppercase tracking-[0.2em] text-xs font-bold">1. Introduction</h2>
                 <p>
-                  Injazat Capital ("we", "us", or "our") is committed to protecting the privacy and confidentiality of the personal information of our clients, investors, and partners. This Privacy Policy outlines our practices regarding the collection, use, and disclosure of information through our digital platforms and institutional operations.
+                  Injazat Capital (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) is committed to protecting the privacy and confidentiality of the personal information of our clients, investors, and partners. This Privacy Policy outlines our practices regarding the collection, use, and disclosure of information through our digital platforms and institutional operations.
                 </p>
               </section>
 
