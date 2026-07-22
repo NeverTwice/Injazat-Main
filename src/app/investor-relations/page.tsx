@@ -247,7 +247,7 @@ export default function InvestorRelationsPage() {
               <div className="p-3 bg-brand-dark-light border border-brand-border text-brand-gold"><Mail size={18} /></div>
               <div>
                 <p className="text-[10px] text-gray-500 uppercase tracking-widest">Email</p>
-                <p className="text-sm font-bold">services@injazatcapitals.com</p>
+                <a href="mailto:services@injazatcapitals.com" className="text-sm font-bold hover:text-brand-gold transition-colors">services@injazatcapitals.com</a>
               </div>
             </div>
             <div className="flex gap-4">

@@ -51,7 +51,7 @@ export default function ContactPage() {
                    <Mail size={18} className="text-brand-gold/40 flex-shrink-0" />
                    <div>
                      <p className="text-brand-ivory font-serif text-lg mb-2">Inquiry Channel</p>
-                     <p className="text-sm text-brand-gold font-light">services@injazatcapitals.com</p>
+                     <a href="mailto:services@injazatcapitals.com" className="text-sm text-brand-gold font-light hover:underline underline-offset-4 decoration-brand-gold/30 transition-all">services@injazatcapitals.com</a>
                      <p className="text-[10px] text-gray-600 mt-2 uppercase tracking-widest">+971 50 826 0503</p>
                    </div>
                  </div>
