@@ -43,18 +43,27 @@ export default function ContactPage() {
     setError("");
 
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "",
+          subject: `Contact Inquiry — ${formData.inquiryType || "General"} — ${formData.firstName} ${formData.lastName}`,
+          from_name: "Injazat Capital Website",
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          company: formData.company || "Not provided",
+          inquiry_type: formData.inquiryType || "General",
+          message: formData.message,
+        }),
       });
       const data = await res.json();
 
-      if (res.ok && data.success) {
+      if (data.success) {
         setSubmitted(true);
         setFormData({ firstName: "", lastName: "", email: "", company: "", inquiryType: "", message: "" });
       } else {
-        setError(data.error || "Something went wrong. Please try again.");
+        setError(data.message || "Something went wrong. Please try again.");
       }
     } catch {
       setError("Network error. Please try again.");

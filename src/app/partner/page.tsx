@@ -83,24 +83,40 @@ export default function PartnerPage() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
+  const partnerTypeLabels: Record<string, string> = {
+    institutional: "Institutional Investor",
+    family: "Family Office",
+    corporate: "Corporate Partner",
+    strategic: "Strategic Partner",
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSending(true);
     setError("");
 
     try {
-      const res = await fetch("/api/partner", {
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "",
+          subject: `Partnership Inquiry — ${partnerTypeLabels[formData.type] || "General"} — ${formData.name}${formData.organization ? ` (${formData.organization})` : ""}`,
+          from_name: "Injazat Capital Website",
+          name: formData.name,
+          email: formData.email,
+          organization: formData.organization || "Not provided",
+          partnership_type: partnerTypeLabels[formData.type] || formData.type || "Not specified",
+          message: formData.message || "No message provided",
+        }),
       });
       const data = await res.json();
 
-      if (res.ok && data.success) {
+      if (data.success) {
         setSubmitted(true);
         setFormData({ name: "", email: "", organization: "", type: "", message: "" });
       } else {
-        setError(data.error || "Something went wrong. Please try again.");
+        setError(data.message || "Something went wrong. Please try again.");
       }
     } catch {
       setError("Network error. Please try again.");
