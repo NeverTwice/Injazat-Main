@@ -34,10 +34,33 @@ export default function ContactPage() {
   const [formData, setFormData] = useState({ firstName: "", lastName: "", email: "", company: "", inquiryType: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    setSending(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setSubmitted(true);
+        setFormData({ firstName: "", lastName: "", email: "", company: "", inquiryType: "", message: "" });
+      } else {
+        setError(data.error || "Something went wrong. Please try again.");
+      }
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -106,10 +129,23 @@ export default function ContactPage() {
                       <option value="other">Other</option>
                     </select>
                     <textarea placeholder="Your Message" rows={4} value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} className="bg-navy-900/60 border border-white/8 text-white/70 px-4 py-3 text-sm focus:border-gold-500/30 focus:outline-none placeholder:text-white/20 w-full resize-none transition-colors duration-300" aria-label="Message" />
-                    <button type="submit" className="w-full bg-gold-500 text-navy-950 px-6 py-3.5 text-[11px] tracking-[0.15em] font-semibold hover:bg-gold-400 transition-all duration-500 flex items-center justify-center gap-2">
-                      {submitted ? "MESSAGE SENT ✓" : <>SEND MESSAGE <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></>}
+                    {error && (
+                      <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-xs p-3 text-center">{error}</div>
+                    )}
+                    <button
+                      type="submit"
+                      disabled={sending || submitted}
+                      className="w-full bg-gold-500 text-navy-950 px-6 py-3.5 text-[11px] tracking-[0.15em] font-semibold hover:bg-gold-400 transition-all duration-500 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                      {submitted ? "MESSAGE SENT ✓" : sending ? (
+                        <><span className="w-3 h-3 border border-navy-950/30 border-t-navy-950 rounded-full animate-spin" /> SENDING...</>
+                      ) : (
+                        <>SEND MESSAGE <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></>
+                      )}
                     </button>
-                    <p className="text-white/15 text-[10px] text-center tracking-wide">We typically respond within 1 business day.</p>
+                    <p className="text-white/15 text-[10px] text-center tracking-wide">
+                      {submitted ? "Thank you. We will respond within 1 business day." : "We typically respond within 1 business day."}
+                    </p>
                   </form>
                 </div>
               </SlideIn>

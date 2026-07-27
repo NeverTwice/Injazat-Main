@@ -80,10 +80,33 @@ export default function PartnerPage() {
   const [formData, setFormData] = useState({ name: "", email: "", organization: "", type: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
+    setSending(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/partner", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setSubmitted(true);
+        setFormData({ name: "", email: "", organization: "", type: "", message: "" });
+      } else {
+        setError(data.error || "Something went wrong. Please try again.");
+      }
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -216,9 +239,23 @@ export default function PartnerPage() {
                       <option value="strategic">Strategic Partner</option>
                     </select>
                     <textarea placeholder="Message" rows={3} value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} className="border border-navy-950/10 px-4 py-3 text-sm focus:border-gold-500 focus:outline-none w-full resize-none bg-white placeholder:text-navy-950/30 transition-colors duration-300" aria-label="Message" />
-                    <button type="submit" className="w-full bg-navy-950 text-white px-6 py-3.5 text-[11px] tracking-[0.15em] font-semibold hover:bg-navy-800 transition-all duration-500 flex items-center justify-center gap-2">
-                      {submitted ? "INQUIRY SUBMITTED ✓" : <>SUBMIT INQUIRY <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></>}
+                    {error && (
+                      <div className="bg-red-50 border border-red-200 text-red-600 text-xs p-3 text-center">{error}</div>
+                    )}
+                    <button
+                      type="submit"
+                      disabled={sending || submitted}
+                      className="w-full bg-navy-950 text-white px-6 py-3.5 text-[11px] tracking-[0.15em] font-semibold hover:bg-navy-800 transition-all duration-500 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                      {submitted ? "INQUIRY SUBMITTED ✓" : sending ? (
+                        <><span className="w-3 h-3 border border-white/30 border-t-white rounded-full animate-spin" /> SUBMITTING...</>
+                      ) : (
+                        <>SUBMIT INQUIRY <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></>
+                      )}
                     </button>
+                    {submitted && (
+                      <p className="text-emerald-700 text-xs text-center mt-2">Thank you. Our partnership team will be in touch shortly.</p>
+                    )}
                   </form>
                 </div>
               </SlideIn>
