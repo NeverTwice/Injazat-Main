@@ -83,6 +83,9 @@ export default function PartnerPage() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
+  const sanitize = (str: string) => str.replace(/<[^>]*>/g, "").trim().substring(0, 2000);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   const partnerTypeLabels: Record<string, string> = {
     institutional: "Institutional Investor",
     family: "Family Office",
@@ -95,19 +98,26 @@ export default function PartnerPage() {
     setSending(true);
     setError("");
 
+    if (!emailRegex.test(formData.email)) {
+      setError("Please enter a valid email address.");
+      setSending(false);
+      return;
+    }
+
     try {
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "07e0998c-32e5-4a23-8025-b45185ad9f22",
-          subject: `Partnership Inquiry — ${partnerTypeLabels[formData.type] || "General"} — ${formData.name}${formData.organization ? ` (${formData.organization})` : ""}`,
+          subject: `Partnership Inquiry — ${partnerTypeLabels[formData.type] || "General"} — ${sanitize(formData.name)}${formData.organization ? ` (${sanitize(formData.organization)})` : ""}`,
           from_name: "Injazat Capital Website",
-          name: formData.name,
-          email: formData.email,
-          organization: formData.organization || "Not provided",
-          partnership_type: partnerTypeLabels[formData.type] || formData.type || "Not specified",
-          message: formData.message || "No message provided",
+          name: sanitize(formData.name),
+          email: sanitize(formData.email),
+          organization: sanitize(formData.organization) || "Not provided",
+          partnership_type: partnerTypeLabels[formData.type] || sanitize(formData.type) || "Not specified",
+          message: sanitize(formData.message) || "No message provided",
+          botcheck: "",
         }),
       });
       const data = await res.json();

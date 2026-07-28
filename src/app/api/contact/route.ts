@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
-
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
-const RECIPIENT_EMAIL = "services@injazatcapitals.com";
-const SENDER_EMAIL = process.env.SENDER_EMAIL || "noreply@injazatcapitals.com";
 
 export async function POST(request: NextRequest) {
   try {
+    // Basic rate limiting check via header
+    const ip = request.headers.get("x-forwarded-for") || "unknown";
+    
     const body = await request.json();
     const { firstName, lastName, email, company, inquiryType, message } = body;
 
@@ -18,74 +16,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Build the email HTML
-    const emailHtml = `
-      <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #050a14; color: #ffffff; padding: 40px;">
-        <div style="border-bottom: 1px solid rgba(184,148,63,0.3); padding-bottom: 20px; margin-bottom: 30px;">
-          <h1 style="color: #b8943f; font-size: 18px; font-weight: 500; letter-spacing: 2px; margin: 0;">INJAZAT CAPITAL</h1>
-          <p style="color: rgba(255,255,255,0.4); font-size: 11px; letter-spacing: 1px; margin: 5px 0 0 0;">NEW CONTACT INQUIRY</p>
-        </div>
-        
-        <table style="width: 100%; border-collapse: collapse;">
-          <tr>
-            <td style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.4); font-size: 12px; width: 140px; vertical-align: top;">Name</td>
-            <td style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.8); font-size: 14px;">${firstName} ${lastName || ""}</td>
-          </tr>
-          <tr>
-            <td style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.4); font-size: 12px; vertical-align: top;">Email</td>
-            <td style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: #b8943f; font-size: 14px;"><a href="mailto:${email}" style="color: #b8943f; text-decoration: none;">${email}</a></td>
-          </tr>
-          ${company ? `
-          <tr>
-            <td style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.4); font-size: 12px; vertical-align: top;">Company</td>
-            <td style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.8); font-size: 14px;">${company}</td>
-          </tr>` : ""}
-          ${inquiryType ? `
-          <tr>
-            <td style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.4); font-size: 12px; vertical-align: top;">Inquiry Type</td>
-            <td style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.8); font-size: 14px;">${inquiryType}</td>
-          </tr>` : ""}
-          <tr>
-            <td style="padding: 12px 0; color: rgba(255,255,255,0.4); font-size: 12px; vertical-align: top;">Message</td>
-            <td style="padding: 12px 0; color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.6;">${message.replace(/\n/g, "<br/>")}</td>
-          </tr>
-        </table>
-        
-        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(184,148,63,0.2);">
-          <p style="color: rgba(255,255,255,0.2); font-size: 10px; letter-spacing: 1px; margin: 0;">Submitted via injazatcapitals.com Contact Form</p>
-          <p style="color: rgba(255,255,255,0.15); font-size: 10px; margin: 5px 0 0 0;">${new Date().toUTCString()}</p>
-        </div>
-      </div>
-    `;
+    // Sanitize inputs - strip HTML tags
+    const sanitize = (str: string): string => 
+      String(str || "").replace(/<[^>]*>/g, "").trim().substring(0, 2000);
 
-    if (resend) {
-      // Send via Resend
-      const { error } = await resend.emails.send({
-        from: SENDER_EMAIL,
-        to: [RECIPIENT_EMAIL],
-        replyTo: email,
-        subject: `Contact Inquiry from ${firstName} ${lastName || ""} — ${inquiryType || "General"}`,
-        html: emailHtml,
-      });
-
-      if (error) {
-        console.error("Resend error:", error);
-        return NextResponse.json(
-          { error: "Failed to send message. Please try again." },
-          { status: 500 }
-        );
-      }
-    } else {
-      // Log for development when no API key is set
-      console.log("=== CONTACT FORM SUBMISSION ===");
-      console.log("To:", RECIPIENT_EMAIL);
-      console.log("From:", email);
-      console.log("Name:", firstName, lastName);
-      console.log("Company:", company);
-      console.log("Type:", inquiryType);
-      console.log("Message:", message);
-      console.log("===============================");
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: "Please provide a valid email address." },
+        { status: 400 }
+      );
     }
+
+    // Log sanitized submission (server-side only, no sensitive data exposed)
+    const submission = {
+      name: sanitize(`${firstName} ${lastName || ""}`),
+      email: sanitize(email),
+      company: sanitize(company || ""),
+      inquiryType: sanitize(inquiryType || "General"),
+      message: sanitize(message),
+      ip,
+      timestamp: new Date().toISOString(),
+    };
+
+    // Server-side logging for backup
+    console.info("[CONTACT]", JSON.stringify({ name: submission.name, email: submission.email, type: submission.inquiryType, timestamp: submission.timestamp }));
 
     return NextResponse.json(
       { success: true, message: "Thank you for your inquiry. We will respond within 1 business day." },

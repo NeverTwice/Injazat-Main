@@ -37,10 +37,19 @@ export default function ContactPage() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
+  const sanitize = (str: string) => str.replace(/<[^>]*>/g, "").trim().substring(0, 2000);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSending(true);
     setError("");
+
+    if (!emailRegex.test(formData.email)) {
+      setError("Please enter a valid email address.");
+      setSending(false);
+      return;
+    }
 
     try {
       const res = await fetch("https://api.web3forms.com/submit", {
@@ -48,13 +57,14 @@ export default function ContactPage() {
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "07e0998c-32e5-4a23-8025-b45185ad9f22",
-          subject: `Contact Inquiry — ${formData.inquiryType || "General"} — ${formData.firstName} ${formData.lastName}`,
+          subject: `Contact Inquiry — ${sanitize(formData.inquiryType) || "General"} — ${sanitize(formData.firstName)} ${sanitize(formData.lastName)}`,
           from_name: "Injazat Capital Website",
-          name: `${formData.firstName} ${formData.lastName}`,
-          email: formData.email,
-          company: formData.company || "Not provided",
-          inquiry_type: formData.inquiryType || "General",
-          message: formData.message,
+          name: sanitize(`${formData.firstName} ${formData.lastName}`),
+          email: sanitize(formData.email),
+          company: sanitize(formData.company) || "Not provided",
+          inquiry_type: sanitize(formData.inquiryType) || "General",
+          message: sanitize(formData.message),
+          botcheck: "",
         }),
       });
       const data = await res.json();
