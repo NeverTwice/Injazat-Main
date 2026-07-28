@@ -47,7 +47,7 @@ export default function ContactPage() {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
-          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "",
+          access_key: process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "07e0998c-32e5-4a23-8025-b45185ad9f22",
           subject: `Contact Inquiry — ${formData.inquiryType || "General"} — ${formData.firstName} ${formData.lastName}`,
           from_name: "Injazat Capital Website",
           name: `${formData.firstName} ${formData.lastName}`,
